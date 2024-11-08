@@ -20,15 +20,39 @@ import {
   Validator,
 } from './validation';
 
+/**
+ * `DirtyState` can either be `PRISTINE` or `DIRTY`.
+ * If the state ist `DIRTY` the `dirty` signal returns `true`.
+ */
 export type DirtyState = 'PRISTINE' | 'DIRTY';
+/**
+ * `TouchedState` can either be `TOUCHED` or `UNTOUCHED`.
+ * If the state ist `TOUCHED` the `touched` signal returns `true`.
+ */
 export type TouchedState = 'TOUCHED' | 'UNTOUCHED';
 
 export type FormField<Value = unknown> = {
   __type: 'FormField';
+  /**
+   * A writable signal that can be used to get or change the current value of the `FormField`.
+   */
   value: WritableSignal<Value>;
+  /**
+   * A signal that returns the validation errors of the `FormField`.
+   */
   errors: Signal<ValidationErrors>;
   errorsArray: Signal<InvalidDetails[]>;
+  /**
+   * A signal that returns the current validation state of the `FormField`.
+   *
+   * @see {@link ValidationState}
+   */
   state: Signal<ValidationState>;
+  /**
+   * A signal that returns `true` if the `state` is `VALID`.
+   *
+   * @see {@link ValidationState}
+   */
   valid: Signal<boolean>;
   dirtyState: Signal<DirtyState>;
   dirty: Signal<boolean>;
@@ -37,6 +61,15 @@ export type FormField<Value = unknown> = {
   hidden: Signal<boolean>;
   disabled: Signal<boolean>;
   readOnly: Signal<boolean>;
+  /**
+   * Mark the `FormField` as `TOUCHED`.
+   *
+   * A `TOUCHED` is emitted by the `touchedStateSignal` signal and the `touched` signal emits `true`.
+   *
+   * @see {@link TouchedState}
+   *
+   * @returns void
+   */
   markAsTouched: () => void;
   markAsDirty: () => void;
   reset: () => void;
@@ -54,6 +87,15 @@ export type FormFieldOptions = {
 };
 export type FormFieldOptionsCreator<T> = (value: Signal<T>) => FormFieldOptions;
 
+/**
+ * Creates a new `FormField`.
+ *
+ * @param value
+ * @param options
+ * @param injector
+ *
+ * @returns FormField
+ */
 export function createFormField<Value>(
   value: Value | WritableSignal<Value>,
   options?: FormFieldOptions | FormFieldOptionsCreator<Value>,
